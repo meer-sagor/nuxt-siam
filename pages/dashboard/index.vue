@@ -2,21 +2,45 @@
 definePageMeta({
   layout: 'dashboard',
 });
+
+const { data, pending, error } = await useFetch(
+  'https://jsonplaceholder.typicode.com/users',
+  {
+    server: false,
+    transform: (data) => {
+      console.log('data =======', data);
+      const modify = data.map((item) => ({
+        ...item,
+        image: 'https://picsum.photos/seed/picsum/200/300',
+      }));
+      return modify;
+    },
+  }
+);
 </script>
 
 <template>
-  <div>
-    hello
-    <!-- <img src="https://avatars.githubusercontent.com/u/739984?v=4"
-      alt="Avatar" class="w-[5rem] h-[5rem] rounded-full"> -->
+  <div class="flex gap-5 flex-wrap">
+    <!-- <pre>{{ data }}</pre> -->
+    <!-- {{asdfasd}} -->
+    <UCard v-for="user in data" :key="user.id">
+      <template #header>
+        <Placeholder class="h-8" />
+        <Avatar
+          :src="user.image"
+          alt="Avatar"
+          size="md"
+        />
+      </template>
 
-      <Avatar src='https://avatars.githubusercontent.com/u/739984?v=4'
-      alt="Avatar" size="md" />
+      <!-- <Placeholder class="h-32" /> -->
+      <div>
+        <h4>{{ user.name }}</h4>
+      </div>
 
-    <UAvatar
-      src="https://avatars.githubusercontent.com/u/739984?v=4"
-      alt="Avatar"
-      size="3xl"
-    />
+      <!-- <template #footer>
+        <Placeholder class="h-8" />
+      </template> -->
+    </UCard>
   </div>
 </template>
