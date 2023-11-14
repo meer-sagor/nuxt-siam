@@ -1,34 +1,34 @@
-// type ILogin = {
-//   email: string;
-//   password: string;
-// };
+import type { ILoginRequest, ILoginResponse } from "~/types/auth";
 
-// export const useLogin = async ({ email, password }: ILogin) => {
-//   const toast = useToast();
-//   if (!isValidEmail(email)) {
-//     toast.add({ title: 'Hello world!' });
-//     return;
-//   }
+export const useLogin = async ({ email, password }: ILoginRequest) => {
+  const toast = useToast();
+  const runtimeConfig = useRuntimeConfig().public;
+  const { getXsrfToken } = useAuthStatus();
+  if (!isValidEmail(email)) {
+    toast.add({ title: 'Hello world!' });
+    return;
+  }
+  $fetch('/csrf-cookie', {
+    baseURL: runtimeConfig.xsrfToken,
+    credentials: 'include',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
+  })
 
-//   return new Promise((resolve, reject) => {
-
-//     $fetch('/sanctum/csrf-cookie').then(response => {
-        
-//     });
-
-//     $fetch('https://itplanbd.xyz/laravel_api/api/login', {
-//       method: 'post',
-//       body: {
-//         email,
-//         password,
-//       },
-//       headers: {
-//         Accept: 'application/json',
-//         'X-XSRF-TOKEN': useCookie('XSRF-TOKEN').value ?? '',
-//         'X-Requested-With': 'XMLHttpRequest',
-//       },
-//     })
-//       .then((res) => resolve(res))
-//       .catch((error) => reject(error));
-//   });
-// };
+  return new Promise<ILoginResponse>((resolve: (value: ILoginResponse) => void, reject: (error: any) => void) => {
+    $fetch('/login', {
+        method: 'post',
+        baseURL: runtimeConfig.apiBaseUrl,
+        body: {
+          email,
+          password,
+        },
+        headers: {
+          'X-XSRF-TOKEN': getXsrfToken.value ?? '',
+        },
+    })
+      .then((res) => resolve(res as ILoginResponse))
+      .catch((error) => reject(error));
+  });
+};

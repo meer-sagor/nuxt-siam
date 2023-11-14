@@ -1,6 +1,8 @@
 export const useAuthStatus = () => {
   const authToken = useCookie('auth_token');
+  const XSRF_TOKEN = useCookie('XSRF-TOKEN');
 
+  const getXsrfToken = computed(()=> XSRF_TOKEN.value)
   const setAuthToken = (token: string) => (authToken.value = token);
   const removeAuthToken = () => (authToken.value = null);
 
@@ -12,5 +14,6 @@ export const useAuthStatus = () => {
     setAuthToken,
     isLoggedIn,
     removeAuthToken,
+    getXsrfToken
   };
 };

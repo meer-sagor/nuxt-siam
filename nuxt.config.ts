@@ -4,5 +4,11 @@ export default defineNuxtConfig({
   modules: ['@nuxt/ui'],
   colorMode: {
     preference: 'light'
+  },
+  runtimeConfig:{
+    public:{
+      xsrfToken: process.env.XSRF_TOKEN,
+      apiBaseUrl: process.env.API_BASE
+    }
   }
 })
