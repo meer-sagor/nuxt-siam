@@ -1,13 +1,13 @@
 <template>
   <main>
-    <AdminHeader/>
     <UContainer>
       <div class="flex">
-        <div class="min-w-[30rem]">
+        <div class="w-1/5">
           <AsideBar />
         </div>
-        <div>
-          <NuxtPage />
+        <div class="w-4/5">
+          <AdminHeader />
+          <slot />
         </div>
       </div>
     </UContainer>

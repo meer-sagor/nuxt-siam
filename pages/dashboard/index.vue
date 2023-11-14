@@ -1,4 +1,7 @@
 <script setup lang="ts">
+useHead({
+  title: 'Dashboard'// Works
+});
 definePageMeta({
   layout: 'dashboard',
   middleware: ['auth']
@@ -21,7 +24,7 @@ const { data, pending, error } = await useFetch(
 </script>
 
 <template>
-  <div class="flex gap-5 flex-wrap">
+  <div class="grid gap-4 grid-cols-4 grid-rows-3">
     <!-- <pre>{{ data }}</pre> -->
     <!-- {{asdfasd}} -->
     <UCard v-for="user in data" :key="user.id">
@@ -31,6 +34,7 @@ const { data, pending, error } = await useFetch(
           :src="user.image"
           alt="Avatar"
           size="md"
+          class="items-center"
         />
       </template>
 

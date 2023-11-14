@@ -1,19 +1,22 @@
 <script setup lang="ts">
 import type { FormError, FormSubmitEvent } from '#ui/types';
 
+
 definePageMeta({
   middleware: ['authorization']
 });
 
 const state = reactive({
-  email: undefined,
-  password: undefined,
+    name: undefined,
+    email: undefined,
+    password: undefined,
 });
 
 const {setAuthToken} = useAuthStatus()
 
 const validate = (state: any): FormError[] => {
   const errors = [];
+  if (!state.name) errors.push({ path: 'name', message: 'Name Filed Are Required' });
   if (!state.email) errors.push({ path: 'email', message: 'Email Filed Are Required' });
   if (!state.password) errors.push({ path: 'password', message: 'Password Filed Are Required' });
   return errors;
@@ -21,32 +24,10 @@ const validate = (state: any): FormError[] => {
 
 async function onSubmit(event: FormSubmitEvent<any>) {
 
-  const { email, password } = event.data;
+  const { name, email, password } = event.data;
   try {
 
-      await useFetch("http://127.0.0.1:8000/sanctum/csrf-cookie", {
-        credentials: "include",
-      });
 
-      const token = useCookie('XSRF-TOKEN');
-      const res = await $fetch('http://127.0.0.1:8000/api/login', {
-        method: 'post',
-        watch:false,
-        body: {
-          email,
-          password,
-        },
-        headers: {
-          'X-XSRF-TOKEN': token.value as string
-        },
-      })
-      
-    const main_token = res.token
-
-    setAuthToken(main_token);
-    navigateTo({
-        name: 'dashboard'
-    })
   } catch (error) {
     console.log('error ======', error);
   }
@@ -57,7 +38,7 @@ async function onSubmit(event: FormSubmitEvent<any>) {
   <UContainer>
     <UCard class="w-[30rem] mx-auto mt-4">
         <center>
-          <h1>Login</h1>
+          <h1>Create your account</h1>
         </center>
         <UForm
           :validate="validate"
@@ -65,6 +46,10 @@ async function onSubmit(event: FormSubmitEvent<any>) {
           class="space-y-4"
           @submit="onSubmit"
         >
+          <UFormGroup label="name" name="name">
+            <UInput v-model="state.name" />
+          </UFormGroup>
+
           <UFormGroup label="Email" name="email">
             <UInput v-model="state.email" />
           </UFormGroup>
@@ -73,8 +58,9 @@ async function onSubmit(event: FormSubmitEvent<any>) {
             <UInput v-model="state.password" type="password" />
           </UFormGroup>
 
-          <UButton type="submit"> Login </UButton>
-          <NuxtLink to="/registration" class="ml-2">Registration</NuxtLink>
+          <UButton type="submit"> Create An Account </UButton>
+
+          <NuxtLink to="/login" class="ml-2">Login</NuxtLink>
         </UForm>
     </UCard>
   </UContainer>
