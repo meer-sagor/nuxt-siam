@@ -57,7 +57,7 @@ async function onSubmit(event: FormSubmitEvent<any>) {
   <UContainer>
     <UCard class="w-[30rem] mx-auto mt-4">
         <center>
-          <h1>Login</h1>
+          <h1>Login Your Account</h1>
         </center>
         <UForm
           :validate="validate"
