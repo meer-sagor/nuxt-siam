@@ -10,9 +10,13 @@ const state = reactive({
     name: undefined,
     email: undefined,
     password: undefined,
+    image:undefined
 });
 
-const {setAuthToken} = useAuthStatus()
+function fileinfo(event){
+  state.image = event.target.files[0];
+}
+
 
 const validate = (state: any): FormError[] => {
   const errors = [];
@@ -24,9 +28,23 @@ const validate = (state: any): FormError[] => {
 
 async function onSubmit(event: FormSubmitEvent<any>) {
 
-  const { name, email, password } = event.data;
+  const { name, email, password, image } = event.data;
+  let formData = new FormData();
+  formData.append('name', name);
+  formData.append('email', email);
+  formData.append('password', password);
+  formData.append('image', image);
   try {
 
+      const res = await $fetch('http://127.0.0.1:8000/api/createaccount', {
+          method: 'post',
+          body: formData,
+          headers: {
+            'Accept': 'application/json',
+          },
+        })
+
+      console.log(res);
 
   } catch (error) {
     console.log('error ======', error);
@@ -37,9 +55,7 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 <template>
   <UContainer>
     <UCard class="w-[30rem] mx-auto mt-4">
-        <center>
-          <h1>Create your account</h1>
-        </center>
+          <h1 class="text-canter">Create your account</h1>
         <UForm
           :validate="validate"
           :state="state"
@@ -57,6 +73,8 @@ async function onSubmit(event: FormSubmitEvent<any>) {
           <UFormGroup label="Password" name="password">
             <UInput v-model="state.password" type="password" />
           </UFormGroup>
+
+          <input type="file" @change="fileinfo" />
 
           <UButton type="submit"> Create An Account </UButton>
 
