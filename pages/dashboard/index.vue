@@ -1,26 +1,27 @@
 <script setup lang="ts">
 useHead({
-  title: 'Dashboard'// Works
+  title: 'Dashboard', // Works
 });
 definePageMeta({
   layout: 'dashboard',
-  middleware: ['auth']
+  middleware: ['auth'],
 });
 
-const { data, pending, error } = await useFetch(
-  'https://jsonplaceholder.typicode.com/users',
-  {
-    server: false,
-    transform: (data) => {
+const { data } = useCustomFetch<any>({
+  cacheKey: 'test',
+  baseURL: 'https://jsonplaceholder.typicode.com',
+  url: '/users',
+  options: {
+    transform: (data: any) => {
       console.log('data =======', data);
-      const modify = data.map((item) => ({
+      const modify = data.map((item: any) => ({
         ...item,
         image: 'https://picsum.photos/seed/picsum/200/300',
       }));
       return modify;
     },
-  }
-);
+  },
+});
 </script>
 
 <template>
@@ -31,7 +32,7 @@ const { data, pending, error } = await useFetch(
       <template #header>
         <Placeholder class="h-8" />
         <Avatar
-          :src="user.image"
+          :src="user?.image"
           alt="Avatar"
           size="md"
           class="items-center"
@@ -40,7 +41,7 @@ const { data, pending, error } = await useFetch(
 
       <!-- <Placeholder class="h-32" /> -->
       <div>
-        <h4>{{ user.name }}</h4>
+        <h4>{{ user?.name }}</h4>
       </div>
 
       <!-- <template #footer>

@@ -11,6 +11,7 @@ const state = reactive({
 });
 
 const { setAuthToken } = useAuthStatus();
+const toast = useToast();
 
 const validate = (state: any): FormError[] => {
   const errors = [];
@@ -29,7 +30,8 @@ async function onSubmit(event: FormSubmitEvent<any>) {
     navigateTo({
       name: 'dashboard',
     });
-  } catch (error) {
+  } catch (error: any) {
+    toast.add({ title: error.message[0] });
     console.log('error ======', error);
   }
 }

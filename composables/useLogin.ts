@@ -1,4 +1,4 @@
-import type { ILoginRequest, ILoginResponse } from "~/types/auth";
+import type { ILoginRequest, ILoginResponse } from '~/types/auth';
 
 export const useLogin = async ({ email, password }: ILoginRequest) => {
   const toast = useToast();
@@ -14,21 +14,19 @@ export const useLogin = async ({ email, password }: ILoginRequest) => {
     headers: {
       'Access-Control-Allow-Origin': '*',
     },
-  })
+  });
+  const CustomHeaders = {
+    'X-XSRF-TOKEN': getXsrfToken.value ?? '',
+  };
+  const payload = {
+    email,
+    password,
+  };
 
-  return new Promise<ILoginResponse>((resolve: (value: ILoginResponse) => void, reject: (error: any) => void) => {
-    $fetch('/login', {
-        method: 'post',
-        baseURL: runtimeConfig.apiBaseUrl,
-        body: {
-          email,
-          password,
-        },
-        headers: {
-          'X-XSRF-TOKEN': getXsrfToken.value ?? '',
-        },
-    })
-      .then((res) => resolve(res as ILoginResponse))
-      .catch((error) => reject(error));
+  return useMutation<ILoginResponse>({
+    method: 'post',
+    url: '/login',
+    headers: CustomHeaders,
+    payload,
   });
 };

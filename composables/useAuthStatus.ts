@@ -14,6 +14,7 @@ export const useAuthStatus = () => {
     setAuthToken,
     isLoggedIn,
     removeAuthToken,
-    getXsrfToken
+    getXsrfToken,
+    getAuthToken
   };
 };

@@ -5,6 +5,11 @@ export default defineNuxtConfig({
   colorMode: {
     preference: 'light'
   },
+  imports: {
+    dirs: [
+      'composables/**'
+    ]
+  },
   runtimeConfig:{
     public:{
       xsrfToken: process.env.XSRF_TOKEN,
